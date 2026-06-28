@@ -4,19 +4,29 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/home',
+      path: '/',
       name: 'Home',
       component: () => import('../views/HomeView.vue'),
     },
     {
-      path: '/list',
-      name: 'List',
-      component: () => import('../views/ListView.vue'),
+      path: '/trade',
+      name: 'Trade',
+      component: () => import('../views/TradeView.vue'),
     },
     {
-      path: '/detail',
-      name: 'Detail',
-      component: () => import('../views/DetailView.vue'),
+      path: '/lost-found',
+      name: 'LostFound',
+      component: () => import('../views/LostFoundView.vue'),
+    },
+    {
+      path: '/group-buy',
+      name: 'GroupBuy',
+      component: () => import('../views/GroupBuyView.vue'),
+    },
+    {
+      path: '/errand',
+      name: 'Errand',
+      component: () => import('../views/ErrandView.vue'),
     },
     {
       path: '/publish',
@@ -29,14 +39,9 @@ const router = createRouter({
       component: () => import('../views/MessageView.vue'),
     },
     {
-      path: '/profile',
-      name: 'Profile',
-      component: () => import('../views/ProfileView.vue'),
-    },
-    {
-      path: '/board',
-      name: 'Board',
-      component: () => import('../views/BoardView.vue'),
+      path: '/user',
+      name: 'UserCenter',
+      component: () => import('../views/UserCenterView.vue'),
     },
   ],
 })
