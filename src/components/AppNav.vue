@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
+import { useUserStore } from '@/stores/user'
 
 const route = useRoute()
+const user = useUserStore()
 
 const navItems = [
   { path: '/', label: '首页', icon: '🏠' },
@@ -11,7 +13,7 @@ const navItems = [
   { path: '/errand', label: '跑腿委托', icon: '🏃' },
   { path: '/publish', label: '发布', icon: '📤' },
   { path: '/message', label: '消息', icon: '💬' },
-  { path: '/user', label: '个人中心', icon: '👤' },
+  { path: '/user', label: user.name, icon: '👤' },
 ]
 </script>
 

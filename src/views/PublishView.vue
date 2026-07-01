@@ -5,7 +5,9 @@ import { lostFoundApi } from '@/api/lostFound'
 import { groupBuyApi } from '@/api/groupBuy'
 import { errandApi } from '@/api/errand'
 import FormField from '@/components/FormField.vue'
+import { useUserStore } from '@/stores/user'
 
+const user = useUserStore()
 const publishType = ref('')
 const title = ref('')
 const description = ref('')
@@ -81,7 +83,7 @@ async function submit() {
     title: title.value.trim(),
     description: description.value.trim(),
     location: location.value.trim(),
-    publisher: '当前用户',
+    publisher: user.name,
     status: 'open',
     publishTime: now,
   }
