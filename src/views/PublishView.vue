@@ -137,7 +137,11 @@ function resetForm() {
     <h2>发布信息</h2>
     <p>选择发布类型，填写对应信息。</p>
 
-    <div v-if="submitted" class="success">
+    <div v-if="!user.isLoggedIn" class="login-tip">
+      <p>请先 <RouterLink to="/login">登录</RouterLink> 后发布内容。</p>
+    </div>
+
+    <div v-else-if="submitted" class="success">
       <p>✅ 发布成功！</p>
       <button @click="resetForm">继续发布</button>
     </div>
@@ -253,6 +257,8 @@ function resetForm() {
   border: none; border-radius: 6px; font-size: 15px; cursor: pointer;
 }
 .submit-btn:hover { background: #337ecc; }
+.login-tip { text-align: center; padding: 48px 0; color: #999; }
+.login-tip a { color: #409eff; }
 .success { text-align: center; padding: 48px 0; }
 .success p { font-size: 20px; margin-bottom: 16px; }
 .success button { padding: 8px 24px; border: 1px solid #409eff; color: #409eff; background: white; border-radius: 6px; cursor: pointer; }

@@ -1,58 +1,6 @@
 {
   "trades": [
     {
-      "id": "1",
-      "title": "九成新机械键盘",
-      "category": "数码配件",
-      "price": 89,
-      "condition": "九成新",
-      "location": "东区宿舍",
-      "publisher": "软件工程 2023 级学生",
-      "publishTime": "2026-06-01 10:20",
-      "image": "",
-      "status": "open",
-      "description": "键盘使用正常，因更换设备转让。"
-    },
-    {
-      "id": "2",
-      "title": "高等数学教材",
-      "category": "教材资料",
-      "price": 18,
-      "condition": "八成新",
-      "location": "图书馆门口",
-      "publisher": "数学学院学生",
-      "publishTime": "2026-06-01 14:30",
-      "image": "",
-      "status": "open",
-      "description": "教材有少量笔记，不影响使用。"
-    },
-    {
-      "id": "3",
-      "title": "宿舍用小冰箱",
-      "category": "生活电器",
-      "price": 120,
-      "condition": "七成新",
-      "location": "西区宿舍",
-      "publisher": "电气学院学生",
-      "publishTime": "2026-06-02 09:15",
-      "image": "",
-      "status": "open",
-      "description": "半导体制冷，低功耗，用了半年。"
-    },
-    {
-      "id": "4",
-      "title": "全新 U 盘 64G",
-      "category": "数码配件",
-      "price": 35,
-      "condition": "全新",
-      "location": "教学楼",
-      "publisher": "计算机学院学生",
-      "publishTime": "2026-06-02 16:00",
-      "image": "",
-      "status": "open",
-      "description": "买电脑赠送，未拆封。"
-    },
-    {
       "id": "5",
       "title": "山地自行车",
       "category": "出行工具",
