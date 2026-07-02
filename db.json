@@ -119,7 +119,7 @@
       "title": "四六级资料团购",
       "type": "学习资料",
       "targetCount": 10,
-      "currentCount": 8,
+      "currentCount": 9,
       "deadline": "2026-06-06 22:00",
       "location": "线上确认",
       "publisher": "外国语学院学生",
@@ -131,7 +131,7 @@
       "title": "羽毛球场地拼单",
       "type": "运动",
       "targetCount": 4,
-      "currentCount": 1,
+      "currentCount": 2,
       "deadline": "2026-06-07 12:00",
       "location": "体育馆",
       "publisher": "体育学院学生",
@@ -185,7 +185,7 @@
       "to": "实验楼 302",
       "deadline": "2026-06-03 18:30",
       "publisher": "实验室学生",
-      "status": "open",
+      "status": "accepted",
       "description": "需要在 18:30 前送到。"
     },
     {
@@ -289,6 +289,14 @@
       "campus": "校区",
       "phone": "",
       "id": "2_x2LSRTJTQ"
+    },
+    {
+      "name": "111",
+      "password": "123456",
+      "role": "normal",
+      "campus": "东区",
+      "phone": "",
+      "id": "1U6HZ3hfGgk"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
