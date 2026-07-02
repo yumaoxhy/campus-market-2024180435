@@ -7,6 +7,7 @@ import ErrorState from '@/components/ErrorState.vue'
 import EmptyState from '@/components/EmptyState.vue'
 import SearchBar from '@/components/SearchBar.vue'
 import AdminDeleteBtn from '@/components/AdminDeleteBtn.vue'
+import DetailModal from '@/components/DetailModal.vue'
 import { useFavoriteStore } from '@/stores/favorite'
 import { useUserStore } from '@/stores/user'
 import type { Trade } from '@/types'
@@ -18,6 +19,7 @@ const loading = ref(true)
 const error = ref('')
 const keyword = ref('')
 const categoryFilter = ref('')
+const selected = ref<Trade | null>(null)
 
 const categories = ['数码配件', '教材资料', '生活电器', '出行工具', '其他']
 
@@ -66,7 +68,7 @@ onMounted(loadData)
     <ErrorState v-else-if="error" :message="error" />
     <EmptyState v-else-if="filtered.length === 0" />
     <div v-else class="list">
-      <div v-for="item in filtered" :key="item.id" class="card-wrapper">
+      <div v-for="item in filtered" :key="item.id" class="card-wrapper" @click="selected = item">
         <ItemCard
           :title="item.title"
           :subtitle="'¥' + item.price"
@@ -84,6 +86,23 @@ onMounted(loadData)
         <AdminDeleteBtn v-if="user.isAdmin" :id="item.id" @delete="deleteTrade" />
       </div>
     </div>
+
+    <DetailModal
+      v-if="selected"
+      :visible="!!selected"
+      :title="selected.title"
+      :details="[
+        { label: '描述', value: selected.description },
+        { label: '价格', value: '¥' + selected.price },
+        { label: '分类', value: selected.category },
+        { label: '成色', value: selected.condition },
+        { label: '地点', value: selected.location },
+        { label: '发布者', value: selected.publisher },
+        { label: '联系方式', value: selected.contact || '未填写' },
+        { label: '发布时间', value: selected.publishTime },
+      ]"
+      @close="selected = null"
+    />
   </section>
 </template>
 

@@ -49,7 +49,8 @@
       "eventTime": "2026-06-02 12:10",
       "contact": "站内消息联系",
       "status": "open",
-      "description": "校园卡卡套为黑色，内有学生证。"
+      "description": "校园卡卡套为黑色，内有学生证。",
+      "publisher": "热心学生"
     },
     {
       "id": "2",
@@ -60,7 +61,8 @@
       "eventTime": "2026-06-02 18:40",
       "contact": "站内消息联系",
       "status": "open",
-      "description": "雨伞放在 A 区一楼值班室。"
+      "description": "雨伞放在 A 区一楼值班室。",
+      "publisher": "热心学生"
     },
     {
       "id": "3",
@@ -71,7 +73,8 @@
       "eventTime": "2026-06-03 14:20",
       "contact": "站内消息联系",
       "status": "open",
-      "description": "AirPods 左耳有刻字'Z'，在图书馆丢失。"
+      "description": "AirPods 左耳有刻字'Z'，在图书馆丢失。",
+      "publisher": "失主"
     },
     {
       "id": "4",
@@ -82,7 +85,8 @@
       "eventTime": "2026-06-03 17:30",
       "contact": "站内消息联系",
       "status": "open",
-      "description": "在二食堂靠窗座位捡到，放在失物招领处。"
+      "description": "在二食堂靠窗座位捡到，放在失物招领处。",
+      "publisher": "热心学生"
     },
     {
       "id": "5",
@@ -93,7 +97,8 @@
       "eventTime": "2026-06-04 08:15",
       "contact": "站内消息联系",
       "status": "open",
-      "description": "包内有笔记本电脑和充电器，非常重要。"
+      "description": "包内有笔记本电脑和充电器，非常重要。",
+      "publisher": "失主"
     }
   ],
   "groupBuys": [
@@ -102,7 +107,7 @@
       "title": "周五晚火锅拼单",
       "type": "拼餐",
       "targetCount": 6,
-      "currentCount": 3,
+      "currentCount": 6,
       "deadline": "2026-06-05 17:00",
       "location": "学校南门",
       "publisher": "计算机学院学生",
@@ -114,7 +119,7 @@
       "title": "四六级资料团购",
       "type": "学习资料",
       "targetCount": 10,
-      "currentCount": 7,
+      "currentCount": 8,
       "deadline": "2026-06-06 22:00",
       "location": "线上确认",
       "publisher": "外国语学院学生",
@@ -168,7 +173,7 @@
       "to": "西区 5 栋",
       "deadline": "2026-06-03 19:00",
       "publisher": "西区学生",
-      "status": "open",
+      "status": "accepted",
       "description": "快递较轻，送到宿舍楼下即可。"
     },
     {
@@ -218,6 +223,20 @@
       "publisher": "东区学生",
       "status": "open",
       "description": "快递较大，需要小推车。"
+    },
+    {
+      "title": "篮球快递",
+      "description": "我网购的宗主牌篮球，限量版的",
+      "location": "本校",
+      "publisher": "111",
+      "status": "open",
+      "publishTime": "2026-07-02 03:22",
+      "taskType": "取快递",
+      "reward": 2,
+      "from": "快递站",
+      "to": "寝室",
+      "deadline": "2026-07-02T11:26",
+      "id": "Ck12vZacMQI"
     }
   ],
   "messages": [

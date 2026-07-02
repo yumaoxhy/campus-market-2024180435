@@ -55,6 +55,7 @@ function validate(): boolean {
     if (!price.value || price.value <= 0) e.price = '请输入有效价格'
     if (!category.value) e.category = '请选择分类'
     if (!condition.value) e.condition = '请选择成色'
+    if (!contact.value.trim()) e.contact = '请输入联系方式'
   }
   if (publishType.value === 'lostFound') {
     if (!itemName.value.trim()) e.itemName = '请输入物品名称'
@@ -95,7 +96,7 @@ async function submit() {
   try {
     switch (publishType.value) {
       case 'trade':
-        await tradeApi.create({ ...base, price: price.value, condition: condition.value, category: category.value })
+        await tradeApi.create({ ...base, price: price.value, condition: condition.value, category: category.value, contact: contact.value.trim() })
         break
       case 'lostFound':
         await lostFoundApi.create({ ...base, type: lostType.value, itemName: itemName.value.trim(), contact: contact.value.trim(), eventTime: now })
@@ -187,6 +188,9 @@ function resetForm() {
               <option value="">-- 请选择 --</option>
               <option v-for="c in conditionOptions" :key="c" :value="c">{{ c }}</option>
             </select>
+          </FormField>
+          <FormField label="联系方式" required :error="errors.contact">
+            <input v-model="contact" placeholder="手机号或微信" />
           </FormField>
         </div>
 

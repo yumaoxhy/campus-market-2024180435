@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useFavoriteStore } from '@/stores/favorite'
 import { tradeApi } from '@/api/trade'
+import DetailModal from '@/components/DetailModal.vue'
 import type { Trade } from '@/types'
 
 const user = useUserStore()
@@ -11,6 +12,7 @@ const favorite = useFavoriteStore()
 const allTrades = ref<Trade[]>([])
 const myTrades = ref<Trade[]>([])
 const favoriteTrades = ref<Trade[]>([])
+const selected = ref<Trade | null>(null)
 const tab = ref<'profile' | 'posts' | 'favorites'>('profile')
 
 async function loadData() {
@@ -74,7 +76,7 @@ onMounted(loadData)
 
       <div v-if="tab === 'favorites'" class="list">
         <div v-if="favoriteTrades.length === 0" class="empty">暂无收藏</div>
-        <div v-for="item in favoriteTrades" :key="item.id" class="card">
+        <div v-for="item in favoriteTrades" :key="item.id" class="card" style="cursor:pointer" @click="selected = item">
           <div class="card-body">
             <h4>{{ item.title }}</h4>
             <p class="price">¥{{ item.price }}</p>
@@ -82,6 +84,21 @@ onMounted(loadData)
           </div>
         </div>
       </div>
+
+      <DetailModal
+        v-if="selected"
+        :visible="!!selected"
+        :title="selected.title"
+        :details="[
+          { label: '描述', value: selected.description },
+          { label: '价格', value: '¥' + selected.price },
+          { label: '分类', value: selected.category },
+          { label: '成色', value: selected.condition },
+          { label: '地点', value: selected.location },
+          { label: '发布者', value: selected.publisher },
+        ]"
+        @close="selected = null"
+      />
 
       <div v-if="tab === 'all'" class="list">
         <div v-for="item in allTrades" :key="item.id" class="card">

@@ -10,6 +10,7 @@ export interface Trade {
   image: string
   status: string
   description: string
+  contact?: string
 }
 
 export interface LostFound {
@@ -22,6 +23,8 @@ export interface LostFound {
   contact: string
   status: string
   description: string
+  publisher: string
+  publishTime?: string
 }
 
 export interface GroupBuy {

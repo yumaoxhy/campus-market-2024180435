@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import { lostFoundApi } from '@/api/lostFound'
 import LoadStatus from '@/components/LoadStatus.vue'
 import AdminDeleteBtn from '@/components/AdminDeleteBtn.vue'
+import DetailModal from '@/components/DetailModal.vue'
 import { useUserStore } from '@/stores/user'
 import type { LostFound } from '@/types'
 
@@ -12,6 +13,7 @@ const loading = ref(true)
 const error = ref('')
 const keyword = ref('')
 const typeFilter = ref('')
+const selected = ref<LostFound | null>(null)
 
 const filtered = computed(() =>
   items.value.filter(i => {
@@ -57,7 +59,7 @@ onMounted(loadData)
 
     <LoadStatus :loading="loading" :error="error" :empty="filtered.length === 0 && !loading">
       <div class="list">
-        <div v-for="item in filtered" :key="item.id" class="card">
+        <div v-for="item in filtered" :key="item.id" class="card" @click="selected = item">
           <span class="tag" :class="item.type">{{ item.type === 'lost' ? '寻物' : '拾到' }}</span>
           <h4>{{ item.title }}</h4>
           <p class="desc">{{ item.description }}</p>
@@ -66,6 +68,22 @@ onMounted(loadData)
         </div>
       </div>
     </LoadStatus>
+
+    <DetailModal
+      v-if="selected"
+      :visible="!!selected"
+      :title="selected.title"
+      :details="[
+        { label: '描述', value: selected.description },
+        { label: '类型', value: selected.type === 'lost' ? '寻物' : '拾到' },
+        { label: '物品名称', value: selected.itemName },
+        { label: '地点', value: selected.location },
+        { label: '时间', value: selected.eventTime },
+        { label: '联系方式', value: selected.contact },
+        { label: '发布者', value: selected.publisher },
+      ]"
+      @close="selected = null"
+    />
   </section>
 </template>
 

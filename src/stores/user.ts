@@ -61,4 +61,6 @@ export const useUserStore = defineStore('user', () => {
   }
 
   return { id, name, phone, campus, role, isLoggedIn, isAdmin, login, register, logout }
+}, {
+  persist: true,
 })
