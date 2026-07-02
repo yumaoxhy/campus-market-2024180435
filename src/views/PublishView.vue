@@ -26,6 +26,8 @@ const from = ref('')
 const to = ref('')
 const deadline = ref('')
 const submitted = ref(false)
+const submitting = ref(false)
+const submitError = ref('')
 
 const errors = ref<Record<string, string>>({})
 
@@ -77,6 +79,8 @@ function validate(): boolean {
 
 async function submit() {
   if (!validate()) return
+  submitting.value = true
+  submitError.value = ''
 
   const now = new Date().toISOString().slice(0, 16).replace('T', ' ')
   const base = {
@@ -88,25 +92,26 @@ async function submit() {
     publishTime: now,
   }
 
-  let res
-  switch (publishType.value) {
-    case 'trade':
-      res = await tradeApi.create({ ...base, price: price.value, condition: condition.value, category: category.value })
-      break
-    case 'lostFound':
-      res = await lostFoundApi.create({ ...base, type: lostType.value, itemName: itemName.value.trim(), contact: contact.value.trim(), eventTime: now })
-      break
-    case 'groupBuy':
-      res = await groupBuyApi.create({ ...base, type: groupType.value, targetCount: targetCount.value, currentCount: 1, deadline: deadline.value })
-      break
-    case 'errand':
-      res = await errandApi.create({ ...base, taskType: taskType.value, reward: reward.value, from: from.value.trim(), to: to.value.trim(), deadline: deadline.value })
-      break
-  }
-
-  if (res && res.status === 201) {
+  try {
+    switch (publishType.value) {
+      case 'trade':
+        await tradeApi.create({ ...base, price: price.value, condition: condition.value, category: category.value })
+        break
+      case 'lostFound':
+        await lostFoundApi.create({ ...base, type: lostType.value, itemName: itemName.value.trim(), contact: contact.value.trim(), eventTime: now })
+        break
+      case 'groupBuy':
+        await groupBuyApi.create({ ...base, type: groupType.value, targetCount: targetCount.value, currentCount: 1, deadline: deadline.value })
+        break
+      case 'errand':
+        await errandApi.create({ ...base, taskType: taskType.value, reward: reward.value, from: from.value.trim(), to: to.value.trim(), deadline: deadline.value })
+        break
+    }
     submitted.value = true
+  } catch {
+    submitError.value = '发布失败，请检查 JSON Server 是否运行'
   }
+  submitting.value = false
 }
 
 function resetForm() {
@@ -129,6 +134,7 @@ function resetForm() {
   deadline.value = ''
   errors.value = {}
   submitted.value = false
+  submitError.value = ''
 }
 </script>
 
@@ -235,7 +241,8 @@ function resetForm() {
           </FormField>
         </div>
 
-        <button type="submit" class="submit-btn">提交发布</button>
+        <span v-if="submitError" class="err" style="margin-bottom:12px;display:block">{{ submitError }}</span>
+        <button type="submit" class="submit-btn" :disabled="submitting">{{ submitting ? '提交中...' : '提交发布' }}</button>
       </template>
     </form>
   </section>
@@ -257,6 +264,7 @@ function resetForm() {
   border: none; border-radius: 6px; font-size: 15px; cursor: pointer;
 }
 .submit-btn:hover { background: #337ecc; }
+.submit-btn:disabled { background: #a0cfff; cursor: not-allowed; }
 .login-tip { text-align: center; padding: 48px 0; color: #999; }
 .login-tip a { color: #409eff; }
 .success { text-align: center; padding: 48px 0; }

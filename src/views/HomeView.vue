@@ -2,15 +2,21 @@
 import { ref, onMounted } from 'vue'
 import { tradeApi } from '@/api/trade'
 import ItemCard from '@/components/ItemCard.vue'
-import EmptyState from '@/components/EmptyState.vue'
+import LoadStatus from '@/components/LoadStatus.vue'
 import type { Trade } from '@/types'
 
 const trades = ref<Trade[]>([])
 const loading = ref(true)
+const error = ref('')
 
 onMounted(async () => {
-  const res = await tradeApi.list()
-  trades.value = res.data.slice(0, 4)
+  loading.value = true
+  try {
+    const res = await tradeApi.list()
+    trades.value = res.data.slice(0, 4)
+  } catch {
+    error.value = '无法获取数据'
+  }
   loading.value = false
 })
 </script>
@@ -21,18 +27,18 @@ onMounted(async () => {
     <p>校园轻集市，一站式校园生活服务平台。</p>
 
     <h3>最新商品</h3>
-    <div v-if="loading"><p>加载中...</p></div>
-    <EmptyState v-else-if="trades.length === 0" />
-    <div v-else class="list">
-      <ItemCard
-        v-for="item in trades"
-        :key="item.id"
-        :title="item.title"
-        :subtitle="'¥' + item.price"
-        :description="item.category + ' · ' + item.condition"
-        :extra="item.publisher + ' · ' + item.publishTime"
-      />
-    </div>
+    <LoadStatus :loading="loading" :error="error" :empty="trades.length === 0 && !loading">
+      <div class="list">
+        <ItemCard
+          v-for="item in trades"
+          :key="item.id"
+          :title="item.title"
+          :subtitle="'¥' + item.price"
+          :description="item.category + ' · ' + item.condition"
+          :extra="item.publisher + ' · ' + item.publishTime"
+        />
+      </div>
+    </LoadStatus>
   </section>
 </template>
 

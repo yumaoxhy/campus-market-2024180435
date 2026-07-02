@@ -25,6 +25,18 @@
       "image": "",
       "status": "open",
       "description": "只做了两套题，含听力光盘。"
+    },
+    {
+      "title": "二手相机",
+      "description": "因为不会用，所以卖了",
+      "location": "东区",
+      "publisher": "123",
+      "status": "open",
+      "publishTime": "2026-07-02 00:52",
+      "price": 788,
+      "condition": "全新",
+      "category": "数码配件",
+      "id": "9oVhHHBiMMw"
     }
   ],
   "lostFounds": [
