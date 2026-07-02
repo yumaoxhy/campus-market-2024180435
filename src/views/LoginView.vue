@@ -14,13 +14,13 @@ const regPassword = ref('')
 const regCampus = ref('')
 const error = ref('')
 
-function handleLogin() {
+async function handleLogin() {
   error.value = ''
   if (!loginName.value.trim() || !password.value.trim()) {
     error.value = '请输入用户名和密码'
     return
   }
-  const ok = user.login(loginName.value.trim(), password.value)
+  const ok = await user.login(loginName.value.trim(), password.value)
   if (!ok) {
     error.value = '用户名或密码错误'
     return
@@ -28,13 +28,13 @@ function handleLogin() {
   router.push('/')
 }
 
-function handleRegister() {
+async function handleRegister() {
   error.value = ''
   if (!regName.value.trim() || !regPassword.value.trim()) {
     error.value = '请输入用户名和密码'
     return
   }
-  const ok = user.register(regName.value.trim(), regPassword.value, '', regCampus.value.trim() || '校本部')
+  const ok = await user.register(regName.value.trim(), regPassword.value, '', regCampus.value.trim() || '校本部')
   if (!ok) {
     error.value = '用户名已存在'
     return

@@ -1,20 +1,16 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { userApi } from '@/api/user'
 
-interface Account {
+const adminAccount = { name: '000', password: '123456', role: 'admin' as const, campus: '校本部', phone: '139****0000' }
+
+interface ApiUser {
+  id: number
   name: string
   password: string
   role: 'normal' | 'admin'
   campus: string
   phone: string
-}
-
-const accounts: Account[] = [
-  { name: '000', password: '123456', role: 'admin', campus: '校本部', phone: '139****0000' },
-]
-
-function nextId() {
-  return accounts.length + 1
 }
 
 export const useUserStore = defineStore('user', () => {
@@ -27,28 +23,53 @@ export const useUserStore = defineStore('user', () => {
 
   const isAdmin = computed(() => isLoggedIn.value && role.value === 'admin')
 
-  function login(loginName: string, password: string) {
-    const account = accounts.find(a => a.name === loginName && a.password === password)
-    if (!account) return false
-    id.value = accounts.indexOf(account) + 1
-    name.value = account.name
-    phone.value = account.phone
-    campus.value = account.campus
-    role.value = account.role
-    isLoggedIn.value = true
-    return true
+  async function login(loginName: string, password: string) {
+    // 管理员：硬编码校验
+    if (loginName === adminAccount.name && password === adminAccount.password) {
+      id.value = 999
+      name.value = adminAccount.name
+      phone.value = adminAccount.phone
+      campus.value = adminAccount.campus
+      role.value = adminAccount.role
+      isLoggedIn.value = true
+      return true
+    }
+    // 普通用户：从 API 查
+    try {
+      const res = await userApi.list()
+      const users = res.data as ApiUser[]
+      const user = users.find((u: ApiUser) => u.name === loginName && u.password === password)
+      if (!user) return false
+      id.value = user.id
+      name.value = user.name
+      phone.value = user.phone || ''
+      campus.value = user.campus || ''
+      role.value = 'normal'
+      isLoggedIn.value = true
+      return true
+    } catch {
+      return false
+    }
   }
 
-  function register(regName: string, regPassword: string, regPhone: string, regCampus: string) {
-    if (accounts.find(a => a.name === regName)) return false
-    accounts.push({ name: regName, password: regPassword, role: 'normal', campus: regCampus, phone: regPhone })
-    id.value = nextId()
-    name.value = regName
-    phone.value = regPhone
-    campus.value = regCampus
-    role.value = 'normal'
-    isLoggedIn.value = true
-    return true
+  async function register(regName: string, regPassword: string, regPhone: string, regCampus: string) {
+    if (regName === adminAccount.name) return false
+    try {
+      const res = await userApi.list()
+      const users = res.data as ApiUser[]
+      if (users.find((u: ApiUser) => u.name === regName)) return false
+      const created = await userApi.create({ name: regName, password: regPassword, role: 'normal', campus: regCampus || '校本部', phone: regPhone })
+      const newUser = created.data as ApiUser
+      id.value = newUser.id
+      name.value = newUser.name
+      phone.value = newUser.phone || ''
+      campus.value = newUser.campus || ''
+      role.value = 'normal'
+      isLoggedIn.value = true
+      return true
+    } catch {
+      return false
+    }
   }
 
   function logout() {

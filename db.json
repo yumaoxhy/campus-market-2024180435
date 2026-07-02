@@ -273,5 +273,15 @@
       "isRead": true
     }
   ],
+  "users": [
+    {
+      "id": 1,
+      "name": "测试用户",
+      "password": "123456",
+      "role": "normal",
+      "campus": "校本部",
+      "phone": ""
+    }
+  ],
   "$schema": "./node_modules/json-server/schema.json"
 }
