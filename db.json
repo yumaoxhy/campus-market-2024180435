@@ -275,12 +275,20 @@
   ],
   "users": [
     {
-      "id": 1,
+      "id": "1",
       "name": "测试用户",
       "password": "123456",
       "role": "normal",
       "campus": "校本部",
       "phone": ""
+    },
+    {
+      "name": "123",
+      "password": "123456",
+      "role": "normal",
+      "campus": "校区",
+      "phone": "",
+      "id": "2_x2LSRTJTQ"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

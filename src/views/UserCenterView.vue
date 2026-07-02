@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useFavoriteStore } from '@/stores/favorite'
 import { tradeApi } from '@/api/trade'
+import { userApi } from '@/api/user'
 import DetailModal from '@/components/DetailModal.vue'
 import type { Trade } from '@/types'
 
@@ -14,6 +15,9 @@ const myTrades = ref<Trade[]>([])
 const favoriteTrades = ref<Trade[]>([])
 const selected = ref<Trade | null>(null)
 const tab = ref<'profile' | 'posts' | 'favorites'>('profile')
+const oldPwd = ref('')
+const newPwd = ref('')
+const pwdMsg = ref('')
 
 async function loadData() {
   const res = await tradeApi.list()
@@ -25,6 +29,26 @@ async function loadData() {
 async function deleteTrade(id: number) {
   await tradeApi.remove(id)
   await loadData()
+}
+
+async function changePassword() {
+  pwdMsg.value = ''
+  if (!oldPwd.value || !newPwd.value) { pwdMsg.value = '请填写旧密码和新密码'; return }
+  if (newPwd.value.length < 4) { pwdMsg.value = '新密码至少 4 位'; return }
+  if (user.isAdmin) { pwdMsg.value = '管理员密码不可修改'; return }
+  try {
+    const res = await userApi.list()
+    const users = res.data as { id: number; name: string; password: string }[]
+    const me = users.find((u: { id: number }) => u.id === user.id)
+    if (!me) { pwdMsg.value = '用户不存在'; return }
+    if (me.password !== oldPwd.value) { pwdMsg.value = '旧密码错误'; return }
+    await userApi.update(user.id, { password: newPwd.value })
+    pwdMsg.value = '✅ 密码修改成功'
+    oldPwd.value = ''
+    newPwd.value = ''
+  } catch {
+    pwdMsg.value = '修改失败'
+  }
 }
 
 onMounted(loadData)
@@ -60,6 +84,14 @@ onMounted(loadData)
         <p><strong>电话：</strong>{{ user.phone }}</p>
         <p><strong>校区：</strong>{{ user.campus }}</p>
         <p><strong>角色：</strong>{{ user.isAdmin ? '管理员' : '普通用户' }}</p>
+
+        <div v-if="!user.isAdmin" class="pwd-section">
+          <h4>修改密码</h4>
+          <input v-model="oldPwd" type="password" placeholder="旧密码" class="pwd-input" />
+          <input v-model="newPwd" type="password" placeholder="新密码（至少 4 位）" class="pwd-input" />
+          <button class="pwd-btn" @click="changePassword">确认修改</button>
+          <span v-if="pwdMsg" class="pwd-msg">{{ pwdMsg }}</span>
+        </div>
       </div>
 
       <div v-if="tab === 'posts'" class="list">
@@ -135,4 +167,10 @@ onMounted(loadData)
 .delete-btn { padding: 6px 16px; border: 1px solid #e74c3c; color: #e74c3c; background: white; border-radius: 6px; cursor: pointer; font-size: 13px; }
 .delete-btn:hover { background: #fff0f0; }
 .empty { text-align: center; padding: 32px; color: #999; }
+.pwd-section { margin-top: 24px; border-top: 1px solid #eee; padding-top: 16px; }
+.pwd-section h4 { margin: 0 0 12px; font-size: 14px; }
+.pwd-input { display: block; width: 100%; max-width: 300px; padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; margin-bottom: 8px; box-sizing: border-box; }
+.pwd-btn { padding: 8px 24px; background: #409eff; color: white; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; }
+.pwd-btn:hover { background: #337ecc; }
+.pwd-msg { display: block; margin-top: 8px; font-size: 13px; }
 </style>
