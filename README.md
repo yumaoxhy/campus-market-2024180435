@@ -1,126 +1,120 @@
-Campus Market Seed
+# 校园轻集市 — Campus Market Seed
 
-《校园轻集市》AI 辅助前端工程实践课程种子仓库
+《校园轻集市》AI 辅助前端工程实践课程项目。
 
-⸻
+---
 
-项目简介
+## 项目简介
 
-Campus Market Seed 是《校园轻集市》课程的统一种子仓库（Seed Repository）。
+面向高校校园生活场景的 Web App，核心业务包括二手交易、失物招领、拼单搭子、跑腿委托、消息沟通和个人中心。本项目为课程实践的最终交付成果。
 
-本仓库不仅提供 Vue 3 前端项目模板，还包含课程文档、开发规范、AI 协作规范、过程性证据模板以及自动检测框架，为整个实训提供统一的开发基础。
+---
 
-本仓库是所有同学开展项目实践的起点。
+## 功能特性
 
-⸻
+- **二手交易** — 浏览、搜索、分类筛选二手商品，收藏感兴趣的商品
+- **失物招领** — 区分寻物/拾到，按类型筛选
+- **拼单搭子** — 发起或加入拼单，实时进度展示
+- **跑腿委托** — 发布跑腿任务，查看酬劳和地点
+- **发布功能** — 四种业务类型的动态表单，含前端校验
+- **消息中心** — 登录后查看个人消息
+- **个人中心** — 用户资料、我的发布、我的收藏、管理员面板
+- **登录/注册** — 账号密码登录，新用户注册
+- **权限控制** — 未登录只能浏览，登录后可发布/删除自己内容，管理员可删除全部
+- **搜索筛选** — 关键词搜索 + 分类/类型筛选，实时过滤
 
-项目目标
+---
 
-通过本课程，你将完成一个基于 Vue 3 的校园轻集市前端项目，并体验真实的软件工程开发流程。
+## 技术栈
 
-课程重点包括：
+| 技术 | 版本 | 用途 |
+|------|------|------|
+| Vue 3 | ^3.5.38 | 前端框架 |
+| Vite | ^8.0.16 | 构建工具 |
+| TypeScript | ~6.0.0 | 类型检查 |
+| Vue Router | ^5.1.0 | 路由管理 |
+| Pinia | ^3.0.4 | 状态管理 |
+| Axios | ^1.18.1 | HTTP 请求 |
+| JSON Server | ^1.0.0 | Mock API |
+| ESLint + OxLint | — | 代码规范 |
 
-* Vue 3 工程化开发
-* Git 版本管理
-* AI Coding 协作开发
-* 软件工程规范
-* 过程性证据管理
-* 项目验收与自动检测
+---
 
-⸻
+## 快速开始
 
-快速开始
+```bash
+# 安装依赖
+npm install
 
-首次使用本仓库，请按照以下顺序阅读文档：
+# 启动 Mock API（端口 3001）
+npx json-server --watch db.json --port 3001
 
-README.md
-    │
-    ▼
-docs/guide/Environment_Setup.md
-    │
-    ▼
-docs/guide/Getting_Started.md
+# 启动开发服务器（端口 5173）
+npm run dev
 
-随后执行：
-
-git clone <课程仓库地址>
-cd campus-market-seed
-nvm use
-pnpm install
-pnpm dev
-
-浏览器访问：
-
+# 浏览器访问
 http://localhost:5173
+```
 
-如果页面显示：
+### 测试账号
 
-项目启动成功
+| 角色 | 用户名 | 密码 |
+|------|--------|------|
+| 普通用户 | 当前用户 | 123456 |
+| 管理员 | 000 | 123456 |
 
-说明开发环境已经配置完成。
+---
 
-⸻
+## 项目结构
 
-项目结构
+```
+campus-market-seed/
+├── db.json                        # Mock 数据
+├── src/
+│   ├── api/                       # API 请求模块
+│   │   ├── http.ts                # Axios 实例
+│   │   ├── trade.ts / lostFound.ts
+│   │   ├── groupBuy.ts / errand.ts / message.ts
+│   ├── components/                # 公共组件
+│   │   ├── AppHeader / AppLayout / AppNav
+│   │   ├── ItemCard / EmptyState / FormField
+│   │   ├── LoadingState / ErrorState / LoadStatus
+│   │   ├── SearchBar / AdminDeleteBtn
+│   ├── router/index.ts            # 路由配置
+│   ├── stores/                    # Pinia 状态管理
+│   │   ├── user.ts                # 用户状态（含登录/注册）
+│   │   └── favorite.ts            # 收藏管理
+│   ├── views/                     # 页面视图（8 个页面）
+│   ├── types/index.ts             # TypeScript 类型定义
+│   ├── App.vue
+│   └── main.ts
+├── docs/evidence/                 # 每日过程证据
+│   ├── Day1_Evidence.md ~ Day7_Evidence.md
+├── package.json
+└── README.md
+```
 
-campus-market-seed
-├── docs
-│   ├── ai              # AI 协作规范
-│   ├── evidence        # 每日过程证据
-│   └── guide           # 学生使用指南
-├── scripts             # 自动检测工具
-├── src                 # 项目源码
-└── CHECK_REPORT.md     # 自动检测报告（后续版本启用）
+---
 
-⸻
+## 路由一览
 
-文档导航
+| 路由 | 页面 | 说明 |
+|------|------|------|
+| / | HomeView | 首页 |
+| /trade | TradeView | 二手交易 |
+| /lost-found | LostFoundView | 失物招领 |
+| /group-buy | GroupBuyView | 拼单搭子 |
+| /errand | ErrandView | 跑腿委托 |
+| /publish | PublishView | 发布信息 |
+| /message | MessageView | 消息中心 |
+| /user | UserCenterView | 个人中心 |
+| /login | LoginView | 登录/注册 |
 
-文档	说明
-docs/guide/Environment_Setup.md	配置课程开发环境
-docs/guide/Getting_Started.md	Day1 快速开始指南
-docs/ai/AI_Collaboration_Card.md	AI 协作记录规范
-docs/evidence/	每日过程性证据模板
+---
 
-⸻
+## 开发规范
 
-技术栈
-
-* Vue 3
-* TypeScript
-* Vite
-* Vue Router
-* Pinia
-* ESLint
-* Oxlint
-
-⸻
-
-开发规范
-
-在整个实训过程中，请遵循以下要求：
-
-* 使用 Git 管理项目开发过程；
-* 每完成一个独立功能及时提交 Commit；
-* 合理使用 AI Coding 工具辅助开发；
-* 保留 AI 协作记录；
-* 每天完成对应的 Evidence；
-* 保持项目始终能够正常运行。
-
-⸻
-
-后续版本
-
-后续版本将逐步提供：
-
-* 自动检测工具（Check Engine）
-* 自动评分报告
-* Git 提交分析
-* AI 协作分析
-* 教师验收工具
-
-⸻
-
-License
-
-本仓库仅用于《校园轻集市》课程教学与实践。
+- 使用 Git 管理项目，每次完成功能及时提交
+- 每天完成对应的 Evidence 记录
+- 保持项目始终能够正常运行
+- 合理使用 AI Coding 工具并保留协作记录
