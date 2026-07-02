@@ -146,6 +146,7 @@ onMounted(loadData)
             <p class="price">¥{{ item.price }}</p>
             <p class="meta">{{ item.createTime }}</p>
           </div>
+          <button class="unfav-btn" @click.stop="favorite.toggle(item.id); favoriteTrades = favoriteTrades.filter(t => t.id !== item.id)">取消收藏</button>
         </div>
       </div>
 
@@ -198,6 +199,8 @@ onMounted(loadData)
 .meta { margin: 0; color: #999; font-size: 12px; }
 .delete-btn { padding: 6px 16px; border: 1px solid #e74c3c; color: #e74c3c; background: white; border-radius: 6px; cursor: pointer; font-size: 13px; }
 .delete-btn:hover { background: #fff0f0; }
+.unfav-btn { padding: 6px 16px; border: 1px solid #999; color: #999; background: white; border-radius: 6px; cursor: pointer; font-size: 13px; flex-shrink: 0; }
+.unfav-btn:hover { background: #f5f5f5; border-color: #e74c3c; color: #e74c3c; }
 .empty { text-align: center; padding: 32px; color: #999; }
 .edit-section { margin-top: 24px; }
 .edit-toggle { padding: 8px 24px; border: 1px solid #409eff; color: #409eff; background: white; border-radius: 6px; font-size: 14px; cursor: pointer; }
