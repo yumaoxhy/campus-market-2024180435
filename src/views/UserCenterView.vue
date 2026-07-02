@@ -19,6 +19,17 @@ const oldPwd = ref('')
 const newPwd = ref('')
 const pwdMsg = ref('')
 const showEdit = ref(false)
+const editName = ref('')
+const editCampus = ref('')
+
+function openEdit() {
+  editName.value = user.name
+  editCampus.value = user.campus
+  oldPwd.value = ''
+  newPwd.value = ''
+  pwdMsg.value = ''
+  showEdit.value = true
+}
 
 async function loadData() {
   const res = await tradeApi.list()
@@ -32,23 +43,31 @@ async function deleteTrade(id: number) {
   await loadData()
 }
 
-async function changePassword() {
+async function saveProfile() {
   pwdMsg.value = ''
-  if (!oldPwd.value || !newPwd.value) { pwdMsg.value = '请填写旧密码和新密码'; return }
-  if (newPwd.value.length < 4) { pwdMsg.value = '新密码至少 4 位'; return }
-  if (user.isAdmin) { pwdMsg.value = '管理员密码不可修改'; return }
+  if (!editName.value.trim()) { pwdMsg.value = '姓名不能为空'; return }
+  if (user.isAdmin) { pwdMsg.value = '管理员不可修改'; return }
   try {
-    const res = await userApi.list()
-    const users = res.data as { id: number; name: string; password: string }[]
-    const me = users.find((u: { id: number }) => u.id === user.id)
-    if (!me) { pwdMsg.value = '用户不存在'; return }
-    if (me.password !== oldPwd.value) { pwdMsg.value = '旧密码错误'; return }
-    await userApi.update(user.id, { password: newPwd.value })
-    pwdMsg.value = '✅ 密码修改成功'
+    const updateData: Record<string, unknown> = { name: editName.value.trim(), campus: editCampus.value.trim() }
+    if (oldPwd.value || newPwd.value) {
+      if (!oldPwd.value || !newPwd.value) { pwdMsg.value = '修改密码请填写旧密码和新密码'; return }
+      if (newPwd.value.length < 4) { pwdMsg.value = '新密码至少 4 位'; return }
+      const res = await userApi.list()
+      const users = res.data as { id: number; name: string; password: string }[]
+      const me = users.find((u: { id: number }) => u.id === user.id)
+      if (!me) { pwdMsg.value = '用户不存在'; return }
+      if (me.password !== oldPwd.value) { pwdMsg.value = '旧密码错误'; return }
+      updateData.password = newPwd.value
+    }
+    await userApi.update(user.id, updateData)
+    user.name = editName.value.trim()
+    user.campus = editCampus.value.trim()
+    pwdMsg.value = '✅ 保存成功'
     oldPwd.value = ''
     newPwd.value = ''
+    showEdit.value = false
   } catch {
-    pwdMsg.value = '修改失败'
+    pwdMsg.value = '保存失败'
   }
 }
 
@@ -87,12 +106,21 @@ onMounted(loadData)
         <p><strong>角色：</strong>{{ user.isAdmin ? '管理员' : '普通用户' }}</p>
 
         <div v-if="!user.isAdmin" class="edit-section">
-          <button class="edit-toggle" @click="showEdit = !showEdit">{{ showEdit ? '取消' : '修改资料' }}</button>
-          <div v-if="showEdit" class="pwd-section">
-            <h4>修改密码</h4>
+          <button v-if="!showEdit" class="edit-toggle" @click="openEdit">修改资料</button>
+          <div v-else class="edit-form">
+            <h4>修改资料</h4>
+            <label>姓名</label>
+            <input v-model="editName" class="pwd-input" />
+            <label>校区</label>
+            <input v-model="editCampus" class="pwd-input" placeholder="如：校本部" />
+            <label>旧密码（选填，修改密码时填写）</label>
             <input v-model="oldPwd" type="password" placeholder="旧密码" class="pwd-input" />
+            <label>新密码（选填）</label>
             <input v-model="newPwd" type="password" placeholder="新密码（至少 4 位）" class="pwd-input" />
-            <button class="pwd-btn" @click="changePassword">确认修改</button>
+            <div class="edit-actions">
+              <button class="save-btn" @click="saveProfile">保存</button>
+              <button class="cancel-btn" @click="showEdit = false">取消</button>
+            </div>
             <span v-if="pwdMsg" class="pwd-msg">{{ pwdMsg }}</span>
           </div>
         </div>
@@ -174,10 +202,14 @@ onMounted(loadData)
 .edit-section { margin-top: 24px; }
 .edit-toggle { padding: 8px 24px; border: 1px solid #409eff; color: #409eff; background: white; border-radius: 6px; font-size: 14px; cursor: pointer; }
 .edit-toggle:hover { background: #f0f5ff; }
-.pwd-section { margin-top: 16px; border-top: 1px solid #eee; padding-top: 16px; }
-.pwd-section h4 { margin: 0 0 12px; font-size: 14px; }
-.pwd-input { display: block; width: 100%; max-width: 300px; padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; margin-bottom: 8px; box-sizing: border-box; }
-.pwd-btn { padding: 8px 24px; background: #409eff; color: white; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; }
-.pwd-btn:hover { background: #337ecc; }
+.edit-form { border: 1px solid #eee; border-radius: 8px; padding: 16px; }
+.edit-form h4 { margin: 0 0 12px; font-size: 14px; }
+.edit-form label { display: block; font-size: 13px; color: #666; margin-bottom: 2px; }
+.pwd-input { display: block; width: 100%; max-width: 300px; padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; margin-bottom: 12px; box-sizing: border-box; }
+.edit-actions { display: flex; gap: 8px; margin-top: 8px; }
+.save-btn { padding: 8px 24px; background: #409eff; color: white; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; }
+.save-btn:hover { background: #337ecc; }
+.cancel-btn { padding: 8px 24px; border: 1px solid #ddd; background: white; border-radius: 6px; font-size: 14px; cursor: pointer; }
+.cancel-btn:hover { background: #f5f5f5; }
 .pwd-msg { display: block; margin-top: 8px; font-size: 13px; }
 </style>
