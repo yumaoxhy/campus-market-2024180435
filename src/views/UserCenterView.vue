@@ -18,6 +18,7 @@ const tab = ref<'profile' | 'posts' | 'favorites'>('profile')
 const oldPwd = ref('')
 const newPwd = ref('')
 const pwdMsg = ref('')
+const showEdit = ref(false)
 
 async function loadData() {
   const res = await tradeApi.list()
@@ -85,12 +86,15 @@ onMounted(loadData)
         <p><strong>校区：</strong>{{ user.campus }}</p>
         <p><strong>角色：</strong>{{ user.isAdmin ? '管理员' : '普通用户' }}</p>
 
-        <div v-if="!user.isAdmin" class="pwd-section">
-          <h4>修改密码</h4>
-          <input v-model="oldPwd" type="password" placeholder="旧密码" class="pwd-input" />
-          <input v-model="newPwd" type="password" placeholder="新密码（至少 4 位）" class="pwd-input" />
-          <button class="pwd-btn" @click="changePassword">确认修改</button>
-          <span v-if="pwdMsg" class="pwd-msg">{{ pwdMsg }}</span>
+        <div v-if="!user.isAdmin" class="edit-section">
+          <button class="edit-toggle" @click="showEdit = !showEdit">{{ showEdit ? '取消' : '修改资料' }}</button>
+          <div v-if="showEdit" class="pwd-section">
+            <h4>修改密码</h4>
+            <input v-model="oldPwd" type="password" placeholder="旧密码" class="pwd-input" />
+            <input v-model="newPwd" type="password" placeholder="新密码（至少 4 位）" class="pwd-input" />
+            <button class="pwd-btn" @click="changePassword">确认修改</button>
+            <span v-if="pwdMsg" class="pwd-msg">{{ pwdMsg }}</span>
+          </div>
         </div>
       </div>
 
@@ -167,7 +171,10 @@ onMounted(loadData)
 .delete-btn { padding: 6px 16px; border: 1px solid #e74c3c; color: #e74c3c; background: white; border-radius: 6px; cursor: pointer; font-size: 13px; }
 .delete-btn:hover { background: #fff0f0; }
 .empty { text-align: center; padding: 32px; color: #999; }
-.pwd-section { margin-top: 24px; border-top: 1px solid #eee; padding-top: 16px; }
+.edit-section { margin-top: 24px; }
+.edit-toggle { padding: 8px 24px; border: 1px solid #409eff; color: #409eff; background: white; border-radius: 6px; font-size: 14px; cursor: pointer; }
+.edit-toggle:hover { background: #f0f5ff; }
+.pwd-section { margin-top: 16px; border-top: 1px solid #eee; padding-top: 16px; }
 .pwd-section h4 { margin: 0 0 12px; font-size: 14px; }
 .pwd-input { display: block; width: 100%; max-width: 300px; padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; margin-bottom: 8px; box-sizing: border-box; }
 .pwd-btn { padding: 8px 24px; background: #409eff; color: white; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; }
